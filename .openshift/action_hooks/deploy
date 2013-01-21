@@ -12,7 +12,7 @@ else
 	curl -OL http://downloads.datastax.com/community/dsc.tar.gz
 	tar -xzvf dsc.tar.gz
 	rm *.tar.gz
-	mv dsc-cassandra-1.1.6 cassandra
+	mv dsc-cassandra-* cassandra
 	mkdir cassandra-data
 	cd cassandra-data
 	mkdir data
