@@ -3,6 +3,16 @@
 # script. The application will work only if it binds to
 # $OPENSHIFT_INTERNAL_IP:8080
 set -x
+max_memory_bytes=`oo-cgroup-read memory.limit_in_bytes`
+max_memory_mb=`expr $max_memory_bytes / 1048576`
+CASSANDRA_JVM_HEAP_RATIO=0.5
+CASSANDRA_JVM_HEAP_NEWSIZE=0.25
+max_heap_size_in_mb=$( echo "$max_memory_mb * $CASSANDRA_JVM_HEAP_RATIO" | bc | awk '{print int($1+0.5)}')
+heap_newsize_in_mb=$( echo "$max_memory_mb * $CASSANDRA_JVM_HEAP_NEWSIZE" | bc | awk '{print int($1+0.5)}')
+MAX_HEAP_SIZE="${max_heap_size_in_mb}M"
+HEAP_NEWSIZE="${heap_newsize_in_mb}M"
+export MAX_HEAP_SIZE
+export HEAP_NEWSIZE
 cd $OPENSHIFT_DATA_DIR/cassandra
 bin/cassandra
 export CQLSH_HOST=$OPENSHIFT_DIY_IP
